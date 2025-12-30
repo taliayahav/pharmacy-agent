@@ -14,22 +14,3 @@ The Pharmacy Agent only provides factual information about medications.
 The Pharmacy Agent does not provide medical advice.
 The Pharmacy Agent does not encourage any purchases.
 The Pharmacy Agent does not diagnose anyone.
-
-Database scripts and data
--------------------------
-- `data/init_db.py` - creates the local SQLite schema used by the project. It creates three tables: `users` (user_id, name), `medications` (med_id, name, active_ingredients, requires_prescription, dosage_info, stock) and `prescriptions` (user_id, med_id) with foreign keys enforced.
-- `data/seed_db.py` - inserts example rows into those tables (users, medications, and a few prescriptions).
-
-Data notes
-----------
-- The seeded data is synthetic and intentionally created for development and testing (example medication IDs like `m1`, `m2`, user IDs like `u1`). Do not treat it as real clinical or inventory data.
-- Medication fields include basic factual fields that the agent queries: `name`, `active_ingredients`, `dosage_info`, whether a prescription is required, and `stock` levels.
-
-How the DB supports the agent
-----------------------------
-- The agent's local tools (`app/tools.py`) read this database to answer factual queries. Typical flows:
-	- The LLM requests a tool call (e.g., `get_medication_by_name`).
-	- The agent runs the corresponding function, which queries `data/pharmacy.db` and returns a JSON-friendly dict with the requested info.
-	- That result is appended to the conversation history and passed back to the model so the assistant can produce a final, informed reply.
-
-These scripts are intentionally simple so you can re-run `data/init_db.py` and `data/seed_db.py` to recreate the local development DB at `data/pharmacy.db`.
